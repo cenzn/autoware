@@ -1,0 +1,5 @@
+# Request: autoware control command
+autoware_control_msgs/Control autoware_commands
+---
+# Response: quanser/MotorCommands
+MotorCommands qcar2_commands
