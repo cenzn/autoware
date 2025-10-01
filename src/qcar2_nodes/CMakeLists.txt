@@ -11,6 +11,10 @@ find_package(rclcpp REQUIRED)
 find_package(autoware_control_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 find_package(qcar2_interfaces REQUIRED)
 
 if(BUILD_TESTING)
@@ -33,10 +37,14 @@ ament_target_dependencies(autoware_control_to_qcar_command rclcpp autoware_contr
 add_executable(vehicle_interface src/vehicle_interface.cpp)
 ament_target_dependencies(vehicle_interface nav_msgs autoware_control_msgs qcar2_interfaces std_msgs rclcpp)
 
+add_executable(scan_matcher_interface src/scan_matcher_interface.cpp)
+ament_target_dependencies(scan_matcher_interface nav_msgs geometry_msgs qcar2_interfaces sensor_msgs std_msgs tf2 tf2_geometry_msgs rclcpp)
+
 install(TARGETS
     autoware_command_convert
     autoware_control_to_qcar_command
     vehicle_interface
+    scan_matcher_interface
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
