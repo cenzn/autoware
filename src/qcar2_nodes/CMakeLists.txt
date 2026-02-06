@@ -9,6 +9,11 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(autoware_control_msgs REQUIRED)
+find_package(autoware_vehicle_msgs REQUIRED)
+find_package(laser_geometry REQUIRED)
+find_package(autoware_adapi_v1_msgs REQUIRED)
+find_package(autoware_perception_msgs REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -35,16 +40,26 @@ add_executable(autoware_control_to_qcar_command src/autoware_control_to_qcar_com
 ament_target_dependencies(autoware_control_to_qcar_command rclcpp autoware_control_msgs std_msgs qcar2_interfaces)
 
 add_executable(vehicle_interface src/vehicle_interface.cpp)
-ament_target_dependencies(vehicle_interface nav_msgs autoware_control_msgs qcar2_interfaces std_msgs rclcpp)
+ament_target_dependencies(vehicle_interface nav_msgs sensor_msgs autoware_control_msgs autoware_vehicle_msgs autoware_adapi_v1_msgs qcar2_interfaces std_msgs rclcpp)
 
 add_executable(scan_matcher_interface src/scan_matcher_interface.cpp)
-ament_target_dependencies(scan_matcher_interface nav_msgs geometry_msgs qcar2_interfaces sensor_msgs std_msgs tf2 tf2_geometry_msgs rclcpp)
+ament_target_dependencies(scan_matcher_interface nav_msgs geometry_msgs qcar2_interfaces autoware_adapi_v1_msgs sensor_msgs diagnostic_msgs std_msgs tf2 tf2_geometry_msgs autoware_vehicle_msgs autoware_planning_msgs rclcpp)
+
+add_executable(fake_perception_interface src/fake_perception_interface.cpp)
+ament_target_dependencies(fake_perception_interface nav_msgs geometry_msgs tf2 tf2_geometry_msgs autoware_perception_msgs rclcpp laser_geometry)
 
 install(TARGETS
     autoware_command_convert
     autoware_control_to_qcar_command
     vehicle_interface
     scan_matcher_interface
+    fake_perception_interface
   DESTINATION lib/${PROJECT_NAME})
+
+# Install launch files.
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}/
+)
 
 ament_package()
